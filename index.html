@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+</head>
+
+<body style="background-color: gold;color:black;border: 6px ridge red; border-bottom-right-radius: 90px;" id="hkr">
+    <h2 style="text-align: left; color: rgb(0, 4, 243);font-style: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<u>Interest Calculator</u></h2>
+    <div class="page">
+        <p style="font-size: 20px;"><b>Enter Starting Date : </b>
+            <input type="date" id="myDate1" style="width:150px; height:30px; padding: 10px; padding-right: 10px;"><br><br></p>
+    </div>
+    <div class="page">
+        <p style="font-size: 20px;"><b>Enter Ending Date : </b>
+            <input type="date" id="myDate2" style="width:150px; height:30px; padding: 10px; padding-right: 10px;"><br><br></p>
+    </div>
+    <form>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" onclick="myFunction()" value="Submit"><br><br></form>
+
+    
+    <form class="form2" name= "form2" action="#">
+        Enter Amount:&nbsp;
+        <input type="number" name="tex1" id="tex1" placeholder="100000"><br><br>
+        Enter Interest<br>(per 100):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="number" step="any" min="0" max="10" name="tex1" id="tex2" placeholder="1.5">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" onclick="calc()" value="Submit"><input type="reset" value="Reset"><br><br><br>
+    </form>
+
+<h3 id="demo"></h3>
+<h2 id="demo1"></h2>
+<h3 id="calculate"></h3>
+<b><p id="t1"></p></b>
+<b><p id="t2"></p></b>
+<b><p id="t3"></p></b>
+<b><p id="t4"></p></b>
+<b><p id="t5"></p></b>
+<script>
+    const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+    var day_diff;
+    var mon_diff;
+    var year_diff;
+    var amount;
+    var interest;
+    var amount1;
+    var no_of_hnrds;
+    var interest_amount;
+    var textf = "";
+    var per_day;
+    var per_dayx;
+    function myFunction()
+    {
+        var p = document.getElementById('myDate1').value;
+        var d = new Date(p);
+        var y1 = d.getFullYear();
+        var m1 = d.getMonth()+1;
+        var da1 = d.getDate();
+
+        var p1 = document.getElementById('myDate2').value;
+        var d1 = new Date(p1);
+        var y2 = d1.getFullYear();
+        var m2 = d1.getMonth()+1;
+        var da2 = d1.getDate();
+        document.getElementById("demo").innerHTML = "Gap Between " + "<span style=color:red>"+ da1 + "-" + monthNames[d.getMonth()] + "-" + y1 + "</span>" + " and " + "<span style=color:red>"+ da2 + "-" + monthNames[d1.getMonth()] + "-" + y2 + "</span>";
+        
+        if(da2 < da1)
+        {
+            if (m2 == 5 || m2 == 7 || m2 == 10 || m2 == 12)
+            {
+                da2 = da2 + 30;
+            }
+            else
+            {
+                da2 = da2 + 30;
+            }
+            m2 = m2 - 1;
+        }
+        if (m2 < m1)
+        {
+            m2 = m2 + 12;
+            y2 = y2 - 1;
+        }
+
+        day_diff = (da2 - da1);
+        mon_diff = (m2 - m1);
+        year_diff = (y2 - y1);
+        document.getElementById("demo1").innerHTML = "Years: " + "<span style=color:blue>" + year_diff + "</span>" + "<br>" + "Months: " + "<span style=color:blue>" + mon_diff + "</span>" +"<br>" + "Days: " + "<span style=color:blue>" + day_diff + "</span>";   
+        setTimeout(calc(),1000);
+    }
+    function fun()
+    {
+        document.form2.style.display = "block";
+    }
+    
+    function calc()
+    {
+        console.log('hi');
+        amount = parseInt(document.getElementById('tex1').value);
+        console.log(amount);
+        interest = parseFloat(document.getElementById('tex2').value);
+        amount1 = amount;
+        for(i=0;i<year_diff;i++)
+        {
+            no_of_hnrds = amount/100;
+            interest_amount = no_of_hnrds*interest*12;
+            amount = amount + interest_amount;
+            
+            textf += "Amount after year " + (i+1) + " is : " + amount + "<br>";
+            document.getElementById('calculate').innerHTML=textf;
+        }
+        //for months
+        if(mon_diff>=4)
+        {
+            no_of_hnrds=amount/100;
+            interest_amount=no_of_hnrds*interest*mon_diff;
+            amount=amount+interest_amount;
+            per_day=interest_amount/(mon_diff*30);
+        }
+        else if(mon_diff<4 && mon_diff!=0 && year_diff==0)
+        {
+            no_of_hnrds=amount/100;
+            interest_amount=no_of_hnrds*interest*mon_diff;
+            amount=amount+interest_amount;
+            per_day=interest_amount/(mon_diff*30);
+        }
+        else if(mon_diff==0)
+        {
+            per_day=interest_amount/(30*12);
+        }
+
+        document.getElementById('t1').innerHTML= "Amount after " + year_diff + " years " + mon_diff + " months is :" + amount + "<span style=color:green>----------------> </span>(" + mon_diff + " months)";
+
+        per_dayx = per_day*day_diff;
+        amount=amount+per_dayx;
+
+        document.getElementById('t2').innerHTML= "Amount after " +year_diff+ " years " +mon_diff+ " months " + day_diff + " days is :" + amount + "<span style=color:green> ----------------> </span>(" + day_diff + " days)";
+
+        document.getElementById('t3').innerHTML = "for THE AMOUNT of <span style=color:Navy><b style=font-size:30px>Rs." + amount1 + "/-</b></span>";
+
+        document.getElementById('t4').innerHTML = "The INTEREST is <span style=color:red;><b style=font-size:30px>Rs."+ (amount-amount1).toFixed(2) + "/-</b></span>";
+
+        document.getElementById('t5').innerHTML = "***The TOTAL AMOUNT is <span style=color:red;><b style=font-size:50px>Rs." + amount + "/-</b></span>*****************";
+
+    }
+</script>
+</body>
+
+</html>
