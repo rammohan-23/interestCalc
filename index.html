@@ -144,7 +144,10 @@
     }
 
     let nameOfUser = prompt("What Is Your Name?","Guest");
-    document.getElementById('nameOfUser').innerHTML = `<h2>Hello ${nameOfUser}! Welcome!!😎`;
+    if (nameOfUser != null){
+        document.getElementById('nameOfUser').innerHTML = `<h2>Hello ${nameOfUser}! Welcome!!😎`;
+    }
+    
 </script>
 </body>
 
