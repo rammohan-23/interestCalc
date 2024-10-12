@@ -6,7 +6,6 @@
 </head>
 
 <body style="background-color: gold;color:black;border: 6px ridge red; border-bottom-right-radius: 90px;" id="hkr">
-    <div id="nameOfUser" style="text-align: center; color: white; font-size: 1.5rem; text-shadow: 6px 6px 11px red;"></div>
     <h2 style="text-align: left; color: rgb(0, 4, 243);font-style: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<u>Interest Calculator</u></h2>
     <div class="page">
         <p style="font-size: 20px;"><b>Enter Starting Date : </b>
@@ -141,14 +140,6 @@
 
         document.getElementById('t5').innerHTML = "***The TOTAL AMOUNT is <span style=color:red;><b style=font-size:50px>Rs." + amount + "/-</b></span>*****************";
 
-    }
-
-    let nameOfUser = prompt("What Is Your Name?","Guest");
-    if (nameOfUser != null){
-        document.getElementById('nameOfUser').innerHTML = `<h2>Hello ${nameOfUser}😍! Welcome!!`;
-    }
-    else{
-        document.getElementById('nameOfUser').innerHTML = `<h2>Hello User! Welcome!!🥰`;
     }
 </script>
 </body>
