@@ -1,115 +1,132 @@
-#include<stdio.h>
-#include<stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
 int valid_date(int date, int mon, int year);
-int main(void)
-{
-    int day1, mon1, year1;
-    int day2, mon2, year2;
-    int day_diff, mon_diff, year_diff;
+int main() {
+	// Given values
+	int day1, mon1, year1;
+	int day2, mon2, year2;
+	int date_diff, mon_diff, year_diff;
 
-    printf("Enter start date (DD/MM/YYYY) : ");
-    scanf("%d/%d/%d",&day1, &mon1,  &year1);
+	printf("Enter start date (DD/MM/YYYY) : ");
+	scanf("%d/%d/%d",&day1, &mon1,  &year1);
 
-    printf("Enter end date (DD/MM/YYYY) : ");
-    scanf("%d/%d/%d", &day2, &mon2, &year2);
+	printf("Enter end date (DD/MM/YYYY) : ");
+	scanf("%d/%d/%d", &day2, &mon2, &year2);
 
-    if(!valid_date(day1, mon1, year1))
-    {
-        printf("First date is invalid.\n");
-    }
+	if(!valid_date(day1, mon1, year1))
+	{
+		printf("First date is invalid.\n");
+	}
 
-    if(!valid_date(day2, mon2, year2))
-    {
-        printf("Second date is invalid.\n");
-        exit(0);
-    }
+	if(!valid_date(day2, mon2, year2))
+	{
+		printf("Second date is invalid.\n");
+		exit(0);
+	}
 
-    if(day2 < day1)
-    {
-        if (mon2 == 5 || mon2 == 7 || mon2 == 10 || mon2 == 12)
-        {
-           day2 += 30;
-        }
-        else
-        {
-           day2 += 30;
-        }
-        mon2 = mon2 - 1;
-    }
-    if (mon2 < mon1)
-    {
-        mon2 += 12;
-        year2 -= 1;
-    }
+	if(day2 < day1)
+	{
+		if (mon2 == 5 || mon2 == 7 || mon2 == 10 || mon2 == 12)
+		{
+			day2 += 30;
+		}
+		else
+		{
+			day2 += 30;
+		}
+		mon2 = mon2 - 1;
+	}
+	if (mon2 < mon1)
+	{
+		mon2 += 12;
+		year2 -= 1;
+	}
 
-    day_diff = day2 - day1;
-    mon_diff = mon2 - mon1;
-    year_diff = year2 - year1;
+	date_diff = day2 - day1;
+	mon_diff = mon2 - mon1;
+	year_diff = year2 - year1;
+	printf("\nDifference: %d years %02d months and %02d days.\n", year_diff, mon_diff, date_diff);
+	double amount;
+	double interest;
+	printf("Enter the amount : ");
+	scanf("%lf", &amount);  // Use %lf for double
+	double amount1 = amount; // Change float to double to match `amount`
+	printf("Enter the interest per 100 : ");
+	scanf("%lf", &interest); // Use %lf for double
 
-    printf("\nDifference: %d years %02d months and %02d days.\n", year_diff, mon_diff, day_diff);
-    float interest,no_of_hnrds,interest_amount,amount,per_day,per_dayx;
-    printf("Enter the amount : ");
-    scanf("%f",&amount);
-    float amount1=amount;
-    printf("Enter the interest per 100 : ");
-    scanf("%f",&interest);
-    for(int i=0;i<year_diff;i++)
-    {
-        no_of_hnrds=amount/(float)100;
-        interest_amount=no_of_hnrds*interest*(float)12;
-        amount=amount+interest_amount;
-        printf("\nAmount after year %d is : %.2f.\t\t------------------(%d)\n",i+1,amount,i+1);
-    }
-    //for months
-    if(mon_diff>=4)
-    {
-        no_of_hnrds=amount/(float)100;
-        interest_amount=no_of_hnrds*interest*(float)mon_diff;
-        amount=amount+interest_amount;
-        per_day=interest_amount/((float)mon_diff*(float)30);
-    }
-    else if(mon_diff<4 && mon_diff!=0 && year_diff==0)
-    {
-        no_of_hnrds=amount/(float)100;
-        interest_amount=no_of_hnrds*interest*(float)mon_diff;
-        amount=amount+interest_amount;
-        per_day=interest_amount/((float)mon_diff*(float)30);
-    }
-    else if(mon_diff==0)
-    {
-        per_day=interest_amount/((float)30*(float)12);
-    }
-    printf("\nAmount after %d years %d months is  :%.2f.\t\t-------------------(%d months)",year_diff,mon_diff,amount,mon_diff);
+	// Step 1: Calculate whole_years
+	double whole_years = (year_diff > 0) ? (amount * pow(1 + (interest * 12 / 100), year_diff)) - amount : 0;
 
-    per_dayx=per_day*(float)day_diff;
-    amount=amount+per_dayx;
-    printf("\nAmount after %d years %d months %d days is :%.2f.\t\t-------------------(%d days)",year_diff,mon_diff,day_diff,amount,day_diff);
+	// Step 2: Calculate n_minus_1_yrs
+	double n_minus_1_yrs = (year_diff > 0) ? (amount * pow(1 + (interest * 12 / 100), (year_diff - 1))) - amount : 0;
 
-    printf("\nfor THE AMOUNT of Rs.%f/-.\n",amount1);
+	// Step 3: Calculate less_3_months
+	double less_3_months = 0;
+	if (year_diff > 0) {
+		if (mon_diff > 3) {
+			less_3_months = ((amount + n_minus_1_yrs) * (1 + (interest * 12 / 100))) - amount - n_minus_1_yrs;
+		} else {
+			less_3_months = ((amount + n_minus_1_yrs) * (1 + (interest * (12 + mon_diff) / 100))) - amount - n_minus_1_yrs;
+		}
+	}
 
-    printf("\nThe INTEREST is Rs.%f/-.\n",amount-amount1);
+	// Step 4: Calculate days_interest_less3_months
+	double days_interest_less3_months = (mon_diff < 3) ? ((less_3_months / (12 + mon_diff)) / 30) * date_diff : 0;
 
-    printf("\n*****************The TOTAL AMOUNT is Rs.%.2f/-.*******************\n",amount);
+	// Step 5: Calculate less3_monthsAndDays
+	double less3_monthsAndDays = (mon_diff < 3) ? n_minus_1_yrs + less_3_months + days_interest_less3_months + amount : 0;
 
-    return 0;
+	// Step 6: Calculate amountWithOnlyYearsInterest
+	double amountWithOnlyYearsInterest = amount + whole_years;
+
+	// Step 7: Calculate monthsInterest
+	double monthsInterest = (mon_diff > 0) ? (amountWithOnlyYearsInterest / 100) * interest * mon_diff : 0;
+
+	// Step 8: Calculate monthsYearsInterest
+	double monthsYearsInterest = amountWithOnlyYearsInterest + monthsInterest;
+
+	// Step 9: Calculate perDayInterest
+	double perDayInterest = 0;
+	if (mon_diff > 0) {
+		perDayInterest = monthsInterest / (mon_diff * 30);
+	} else if (monthsInterest > 0) {
+		perDayInterest = monthsInterest / (30 * 12);
+	} else {
+		perDayInterest = ((amountWithOnlyYearsInterest * interest / 100) / 30);
+	}
+
+	// Step 10: Calculate daysInterest
+	double daysInterest = perDayInterest * date_diff;
+
+	// Step 11: Calculate totalAmountGT3
+	double totalAmountGT3 = monthsYearsInterest + daysInterest;
+
+	// Step 12: Calculate totalAmountLT3
+	double totalAmountLT3 = (mon_diff < 3) ? ((year_diff == 0) ? totalAmountGT3 : less3_monthsAndDays) : totalAmountGT3;
+
+	// Print the result
+	printf("T2 = %.2f\n", totalAmountLT3);
+
+	return 0;
 }
 int valid_date(int day, int mon, int year)
 {
-    int is_valid = 1;
-    if (year >= 1800 && year <= 9999)
-    {
-        if(mon >= 1 && mon <= 12)
-        {
-            is_valid = 1;
-        }
-        else
-        {
-            is_valid = 0;
-        }
-    }
-    else
-    {
-        is_valid = 0;
-    }
-    return is_valid;
+	int is_valid = 1;
+	if (year >= 1800 && year <= 9999)
+	{
+		if(mon >= 1 && mon <= 12)
+		{
+			is_valid = 1;
+		}
+		else
+		{
+			is_valid = 0;
+		}
+	}
+	else
+	{
+		is_valid = 0;
+	}
+	return is_valid;
 }
