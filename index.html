@@ -1,147 +1,229 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <style>
+       body {
+            background-color: #f4f4f4;
+            color: #333;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+		.navbar {
+            width: 100%;
+            background: #007BFF;
+            padding: 10px;
+            display: flex;
+            justify-content: flex-end;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 8px 16px; /* Adjusted padding to fit smaller navbar */
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            transition: background 0.3s, transform 0.2s;
+            margin-right: 20px;
+        }
+		.navbar a:hover {
+           background: rgba(255, 255, 255, 0.4);
+            transform: scale(1.05);
+        }		
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 350px;
+            text-align: center;
+            position: relative;
+        }
+        h2 {
+            color: #007BFF;
+            margin-bottom: 20px;
+        }
+        input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            background: #007BFF;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: red;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+    </style>
 </head>
+<body>
+	 <div class="navbar">
+        <a href="https://rammohan-23.github.io/Excel_Interest/">Save details?</a>
+    </div>					
+    <div class="container">
+	 <div id="notification" class="notification"></div>
+        <h2>Interest Calculator</h2>
+        <label>Enter Starting Date:</label>
+        <input type="date" id="myDate1" onchange="updateDuration()">
 
-<body style="background-color: gold;color:black;border: 6px ridge red; border-bottom-right-radius: 90px;" id="hkr">
-    <h2 style="text-align: left; color: rgb(0, 4, 243);font-style: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<u>Interest Calculator</u></h2>
-    <div class="page">
-        <p style="font-size: 20px;"><b>Enter Starting Date : </b>
-            <input type="date" id="myDate1" style="width:150px; height:30px; padding: 10px; padding-right: 10px;"><br><br></p>
+        <label>Enter Ending Date:</label>
+        <input type="date" id="myDate2" onchange="updateDuration()">
+
+        <label>Enter Amount:</label>
+        <input type="number" id="amount" placeholder="100000">
+
+        <label>Enter Interest Rate (per 100):</label>
+        <input type="number" step="any" id="interest" placeholder="1.5">
+
+        <h3 id="durationBtn" disabled>Duration: 0 years, 0 months, 0 days</h3>
+        <button onclick="calculateInterest()">Calculate</button>
+		<h3 id="output"></h3>
+		<button onclick="resetForm()" style="background:#dc3545">Reset</button>
     </div>
-    <div class="page">
-        <p style="font-size: 20px;"><b>Enter Ending Date : </b>
-            <input type="date" id="myDate2" style="width:150px; height:30px; padding: 10px; padding-right: 10px;"><br><br></p>
-    </div>
-    <form>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" onclick="myFunction()" value="Submit"><br><br></form>
-
     
-    <form class="form2" name= "form2" action="#">
-        Enter Amount:&nbsp;
-        <input type="number" name="tex1" id="tex1" placeholder="100000"><br><br>
-        Enter Interest<br>(per 100):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <input type="number" step="any" min="0" max="10" name="tex1" id="tex2" placeholder="1.5">
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" onclick="calc()" value="Submit"><input type="reset" value="Reset"><br><br><br>
-    </form>
-
-<h3 id="demo"></h3>
-<h2 id="demo1"></h2>
-<h3 id="calculate"></h3>
-<b><p id="t1"></p></b>
-<b><p id="t2"></p></b>
-<b><p id="t3"></p></b>
-<b><p id="t4"></p></b>
-<b><p id="t5"></p></b>
-<script>
-    const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-    var day_diff;
-    var mon_diff;
-    var year_diff;
-    var amount;
-    var interest;
-    var amount1;
-    var no_of_hnrds;
-    var interest_amount;
-    var textf = "";
-    var per_day;
-    var per_dayx;
-    function myFunction()
-    {
-        var p = document.getElementById('myDate1').value;
-        var d = new Date(p);
-        var y1 = d.getFullYear();
-        var m1 = d.getMonth()+1;
-        var da1 = d.getDate();
-
-        var p1 = document.getElementById('myDate2').value;
-        var d1 = new Date(p1);
-        var y2 = d1.getFullYear();
-        var m2 = d1.getMonth()+1;
-        var da2 = d1.getDate();
-        document.getElementById("demo").innerHTML = "Gap Between " + "<span style=color:red>"+ da1 + "-" + monthNames[d.getMonth()] + "-" + y1 + "</span>" + " and " + "<span style=color:red>"+ da2 + "-" + monthNames[d1.getMonth()] + "-" + y2 + "</span>";
-        
-        if(da2 < da1)
-        {
-            if (m2 == 5 || m2 == 7 || m2 == 10 || m2 == 12)
-            {
-                da2 = da2 + 30;
-            }
-            else
-            {
-                da2 = da2 + 30;
-            }
-            m2 = m2 - 1;
+    <script>
+	   function showNotification(message) {
+            let notification = document.getElementById("notification");
+            notification.innerText = message;
+            notification.style.display = "block";
+            setTimeout(() => {
+                notification.style.display = "none";
+            }, 3000);
         }
-        if (m2 < m1)
-        {
-            m2 = m2 + 12;
-            y2 = y2 - 1;
-        }
-
-        day_diff = (da2 - da1);
-        mon_diff = (m2 - m1);
-        year_diff = (y2 - y1);
-        document.getElementById("demo1").innerHTML = "Years: " + "<span style=color:blue>" + year_diff + "</span>" + "<br>" + "Months: " + "<span style=color:blue>" + mon_diff + "</span>" +"<br>" + "Days: " + "<span style=color:blue>" + day_diff + "</span>";   
-        setTimeout(calc(),1000);
-    }
-    function fun()
-    {
-        document.form2.style.display = "block";
-    }
-    
-    function calc()
-    {
-        console.log('hi');
-        amount = parseInt(document.getElementById('tex1').value);
-        console.log(amount);
-        interest = parseFloat(document.getElementById('tex2').value);
-        amount1 = amount;
-        for(i=0;i<year_diff;i++)
-        {
-            no_of_hnrds = amount/100;
-            interest_amount = no_of_hnrds*interest*12;
-            amount = amount + interest_amount;
+        function updateDuration() {
+            let startDate = new Date(document.getElementById("myDate1").value);
+            let endDate = new Date(document.getElementById("myDate2").value);
             
-            textf += "Amount after year " + (i+1) + " is : " + amount + "<br>";
-            document.getElementById('calculate').innerHTML=textf;
+            if (isNaN(startDate) || isNaN(endDate) || endDate <= startDate) {
+                document.getElementById("durationBtn").innerText = "Duration: Enter dates properly";
+                return;
+            }
+            
+            let day1 = startDate.getDate();
+            let mon1 = startDate.getMonth() + 1;
+            let year1 = startDate.getFullYear();
+
+            let day2 = endDate.getDate();
+            let mon2 = endDate.getMonth() + 1;
+            let year2 = endDate.getFullYear();
+
+            if (day2 < day1) {
+                day2 += 30;
+                mon2 -= 1;
+            }
+            if (mon2 < mon1) {
+                mon2 += 12;
+                year2 -= 1;
+            }
+
+            let day_diff = day2 - day1;
+            let mon_diff = mon2 - mon1;
+            let year_diff = year2 - year1;
+
+            document.getElementById("durationBtn").innerText = `Duration: ${year_diff} years, ${mon_diff} months, ${day_diff} days`;
         }
-        //for months
-        if(mon_diff>=4)
-        {
-            no_of_hnrds=amount/100;
-            interest_amount=no_of_hnrds*interest*mon_diff;
-            amount=amount+interest_amount;
-            per_day=interest_amount/(mon_diff*30);
+
+        function calculateInterest() {
+            let startDate = new Date(document.getElementById("myDate1").value);
+            let endDate = new Date(document.getElementById("myDate2").value);
+            let amount = parseFloat(document.getElementById("amount").value);
+            let interestRate = parseFloat(document.getElementById("interest").value);
+			if (isNaN(startDate) || isNaN(endDate) || endDate <= startDate) {
+                showNotification("Enter dates properly");
+                return;
+            }
+			if (isNaN(amount) || isNaN(interestRate)) {
+                showNotification("Enter amount and interest properly");
+                return;
+            }
+			if (endDate <= startDate) {
+                document.getElementById("output").innerHTML = "<b style='color: red;'>Ending date must be greater than starting date!</b>";
+                return;
+            }
+            let day1 = startDate.getDate();
+            let mon1 = startDate.getMonth() + 1;
+            let year1 = startDate.getFullYear();
+
+            let day2 = endDate.getDate();
+            let mon2 = endDate.getMonth() + 1;
+            let year2 = endDate.getFullYear();
+
+            if (day2 < day1) {
+                day2 += 30;
+                mon2 -= 1;
+            }
+            if (mon2 < mon1) {
+                mon2 += 12;
+                year2 -= 1;
+            }
+
+            let day_diff = day2 - day1;
+            let mon_diff = mon2 - mon1;
+            let year_diff = year2 - year1;
+
+            let whole_years = (year_diff > 0) ? (amount * Math.pow(1 + (interestRate * 12 / 100), year_diff)) - amount : 0;
+            let n_minus_1_yrs = (year_diff > 0) ? (amount * Math.pow(1 + (interestRate * 12 / 100), (year_diff - 1))) - amount : 0;
+            
+            let less_3_months = 0;
+            if (year_diff > 0) {
+                if (mon_diff > 3) {
+                    less_3_months = ((amount + n_minus_1_yrs) * (1 + (interestRate * 12 / 100))) - amount - n_minus_1_yrs;
+                } else {
+                    less_3_months = ((amount + n_minus_1_yrs) * (1 + (interestRate * (12 + mon_diff) / 100))) - amount - n_minus_1_yrs;
+                }
+            }
+            
+            let days_interest_less3_months = (mon_diff < 3) ? ((less_3_months / (12 + mon_diff)) / 30) * day_diff : 0;
+            let less3_monthsAndDays = (mon_diff < 3) ? n_minus_1_yrs + less_3_months + days_interest_less3_months + amount : 0;
+            let amountWithOnlyYearsInterest = amount + whole_years;
+            let monthsInterest = (mon_diff > 0) ? (amountWithOnlyYearsInterest / 100) * interestRate * mon_diff : 0;
+            let monthsYearsInterest = amountWithOnlyYearsInterest + monthsInterest;
+            
+            let perDayInterest = (mon_diff > 0) ? monthsInterest / (mon_diff * 30) : ((amountWithOnlyYearsInterest * interestRate / 100) / 30);
+            let daysInterest = perDayInterest * day_diff;
+            let totalAmountGT3 = monthsYearsInterest + daysInterest;
+            let totalAmountLT3 = (mon_diff < 3) ? ((year_diff == 0) ? totalAmountGT3 : less3_monthsAndDays) : totalAmountGT3;
+            
+            document.getElementById("output").innerHTML =
+                `Total Amount : <b>Rs. ${totalAmountLT3.toFixed(2)}</b><br>
+                 Total Interest Earned: <b>Rs. ${(totalAmountLT3 - amount).toFixed(2)}</b>`;
         }
-        else if(mon_diff<4 && mon_diff!=0 && year_diff==0)
-        {
-            no_of_hnrds=amount/100;
-            interest_amount=no_of_hnrds*interest*mon_diff;
-            amount=amount+interest_amount;
-            per_day=interest_amount/(mon_diff*30);
+		function resetForm() {
+            document.getElementById("myDate1").value = "";
+            document.getElementById("myDate2").value = "";
+            document.getElementById("amount").value = "";
+            document.getElementById("interest").value = "";
+            document.getElementById("durationBtn").innerText = "Duration: 0 years, 0 months, 0 days";
+            document.getElementById("output").innerHTML = "";
         }
-        else if(mon_diff==0)
-        {
-            per_day=interest_amount/(30*12);
-        }
-
-        document.getElementById('t1').innerHTML= "Amount after " + year_diff + " years " + mon_diff + " months is :" + amount + "<span style=color:green>----------------> </span>(" + mon_diff + " months)";
-
-        per_dayx = per_day*day_diff;
-        amount=amount+per_dayx;
-
-        document.getElementById('t2').innerHTML= "Amount after " +year_diff+ " years " +mon_diff+ " months " + day_diff + " days is :" + amount + "<span style=color:green> ----------------> </span>(" + day_diff + " days)";
-
-        document.getElementById('t3').innerHTML = "for THE AMOUNT of <span style=color:Navy><b style=font-size:30px>Rs." + amount1 + "/-</b></span>";
-
-        document.getElementById('t4').innerHTML = "The INTEREST is <span style=color:red;><b style=font-size:30px>Rs."+ (amount-amount1).toFixed(2) + "/-</b></span>";
-
-        document.getElementById('t5').innerHTML = "***The TOTAL AMOUNT is <span style=color:red;><b style=font-size:50px>Rs." + amount + "/-</b></span>*****************";
-
-    }
-</script>
+    </script>
 </body>
-
 </html>
