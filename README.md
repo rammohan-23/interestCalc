@@ -6,6 +6,7 @@ The duration calculator in this work assumes every month has exactly 30 days, wi
 
 
 
-![Demo GIF](https://raw.githubusercontent.com/rammohan-23/interestCalc/master/interest.gif)
+![Demo GIF](https://raw.githubusercontent.com/rammohan-23/interestCalc/master/interestCalc.gif)
+
 
 
